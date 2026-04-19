@@ -9,7 +9,7 @@ from scorer.haiku_grader import haiku_grader
 
 
 PROMPT_PATH = Path(__file__).parent.parent / "prompts" / "task_prompt.md"
-REPO_URL_DEFAULT = "https://github.com/OWNER/REPO.git"
+REPO_URL_DEFAULT = "https://github.com/shwoop/siggy.git"
 
 
 def make_dataset() -> MemoryDataset:
@@ -26,7 +26,7 @@ def make_dataset() -> MemoryDataset:
             setup=f"""#!/bin/bash
 set -euo pipefail
 cd /workspace
-git clone {repo_url} repo
+git clone --single-branch --branch 190-base {repo_url} repo
 cd repo
 echo "Repo cloned successfully"
 """,

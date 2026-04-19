@@ -1,4 +1,4 @@
-FROM rust:1.87-bookworm
+FROM rust:1.95-bullseye
 
 # Install Node.js (required by Claude Code agent)
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Claude Code
+RUN npm install -g @anthropic-ai/claude-code
 
 # Create workspace directory
 RUN mkdir -p /workspace
