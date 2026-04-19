@@ -25,9 +25,7 @@ def make_dataset() -> MemoryDataset:
             target="All tests pass. The agent should have identified issues, made fixes, and confirmed with cargo test.",
             setup=f"""#!/bin/bash
 set -euo pipefail
-cd /workspace
-git clone --single-branch --branch 190-base {repo_url} repo
-cd repo
+git clone --single-branch --branch 190-base {repo_url} /workspace
 echo "Repo cloned successfully"
 """,
             metadata={
@@ -43,7 +41,7 @@ def clone_and_solve() -> Task:
     return Task(
         dataset=make_dataset(),
         solver=claude_code(
-            system_prompt="You are working in /workspace/repo. This is a Rust codebase.",
+            system_prompt="You are working in /workspace. This is a Rust codebase.",
         ),
         scorer=haiku_grader(),
         sandbox="docker",
