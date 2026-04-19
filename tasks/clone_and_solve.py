@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from inspect_ai import Task, task
@@ -8,14 +9,13 @@ from scorer.haiku_grader import haiku_grader
 
 
 PROMPT_PATH = Path(__file__).parent.parent / "prompts" / "task_prompt.md"
-
-# Placeholder - replace with actual repo URL
-REPO_URL = "https://github.com/OWNER/REPO.git"
+REPO_URL_DEFAULT = "https://github.com/OWNER/REPO.git"
 
 
 def make_dataset() -> MemoryDataset:
     """Create the evaluation dataset with a single sample."""
 
+    repo_url = os.environ.get("REPO_URL", REPO_URL_DEFAULT)
     task_prompt = PROMPT_PATH.read_text().strip()
 
     return MemoryDataset([
@@ -26,12 +26,12 @@ def make_dataset() -> MemoryDataset:
             setup=f"""#!/bin/bash
 set -euo pipefail
 cd /workspace
-git clone {REPO_URL} repo
+git clone {repo_url} repo
 cd repo
 echo "Repo cloned successfully"
 """,
             metadata={
-                "repo_url": REPO_URL,
+                "repo_url": repo_url,
             },
         )
     ])

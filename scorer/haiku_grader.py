@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from inspect_ai.scorer import (
@@ -12,16 +13,18 @@ from inspect_ai.model import ChatMessageUser, get_model
 
 
 GRADING_CRITERIA_PATH = Path(__file__).parent.parent / "grading" / "grading_criteria.md"
+GRADER_MODEL_DEFAULT = "anthropic/claude-haiku-4-5-20251001"
 
 
 @scorer(metrics=[accuracy(), stderr()])
 def haiku_grader():
     """Grade agent output using Claude Haiku with criteria from markdown file."""
 
-    grading_criteria = GRADING_CRITERIA_PATH.read_text().strip()
-    grader = get_model("anthropic/claude-haiku-4-5-20251001")
+    grader = get_model(os.environ.get("GRADER_MODEL", GRADER_MODEL_DEFAULT))
 
     async def score(state: TaskState, target: Target) -> Score:
+        grading_criteria = GRADING_CRITERIA_PATH.read_text().strip()
+
         prompt = f"""You are grading an AI agent's work on a coding task.
 
 ## Task Given to Agent
@@ -48,16 +51,13 @@ Then explain your reasoning in 2-3 sentences."""
 
         if "CORRECT" in completion and "INCORRECT" not in completion:
             value = "C"
-            numeric = 1.0
         elif "PARTIAL" in completion:
             value = "P"
-            numeric = 0.5
         else:
             value = "I"
-            numeric = 0.0
 
         return Score(
-            value=numeric,
+            value=value,
             answer=state.output.completion,
             explanation=result.completion,
         )

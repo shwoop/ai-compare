@@ -12,3 +12,15 @@ dependencies = [
 [build-system]
 requires = ["setuptools>=75.0"]
 build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+]
+
+[tool.setuptools.packages.find]
+include = ["tasks*", "scorer*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
