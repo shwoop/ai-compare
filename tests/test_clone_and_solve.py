@@ -15,4 +15,4 @@ def test_repo_url_from_env(monkeypatch):
 def test_repo_url_default_when_env_not_set(monkeypatch):
     monkeypatch.delenv("REPO_URL", raising=False)
     dataset = make_dataset()
-    assert "OWNER/REPO" in dataset.samples[0].setup
+    assert "shwoop/siggy" in dataset.samples[0].setup

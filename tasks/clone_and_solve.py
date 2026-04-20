@@ -22,7 +22,7 @@ def make_dataset() -> MemoryDataset:
         Sample(
             id="clone-and-solve",
             input=task_prompt,
-            target="All tests pass. The agent should have identified issues, made fixes, and confirmed with cargo test.",
+            target="The timed mute feature is implemented: /mute accepts an optional duration (1h, 8h, 1d, 1w), the expiry is stored in the database, and notifications respect the expiry. All tests pass.",
             setup=f"""#!/bin/bash
 set -euo pipefail
 git clone --single-branch --branch 190-base {repo_url} /workspace
